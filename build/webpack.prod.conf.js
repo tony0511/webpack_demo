@@ -3,17 +3,22 @@ const merge = require('webpack-merge');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 打包前清除之前的文件
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 用新生成的 index.html 文件替换原来的 index.html
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin'); // 提取相应的代码生成单独的文件（如css）
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin'); // 压缩 css 文件
+const CopyWebpackPlugin = require('copy-webpack-plugin'); // 复制静态文件
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
 const utils = require('./utils');
 
-module.exports = merge(baseWebpackConfig, {
+const webpackConfig = merge(baseWebpackConfig, {
   entry: { // 入口起点
     app: './src/index.js', // 入口1
     // test: './src/test.js' // 入口2 用于多页开发
   },
   output: {
+    path: config.build.assetsRoot,
+    filename: utils.assetsPath('js/[name].[hash].js'),
+    // chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
     publicPath: config.build.assetsPublicPath,
   },
   devtool: config.build.productionSourceMap ? '#source-map' : false,
@@ -29,7 +34,7 @@ module.exports = merge(baseWebpackConfig, {
       'process.env': config.build.env,
     }),
     new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html
-      title: 'Output Management',
+      // title: 'Output Management',
       filename: config.build.index,
       template: 'index.html',
       inject: true,
@@ -70,12 +75,71 @@ module.exports = merge(baseWebpackConfig, {
     //   },
     //   sourceMap: true
     // }),
-    new webpack.optimize.CommonsChunkPlugin({ // 提出公共代码放置到公共文件中
-      name: 'common', // Specify the common bundle's name.
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({ // 提出公共代码放置到公共文件中
+    //   name: 'common', // Specify the common bundle's name.
+    // }),
     // extract css into its own file
     new ExtractTextPlugin({ // 生成独立的 css 文件
       filename: utils.assetsPath('css/[name].[contenthash].css')
     }),
+    // Compress extracted CSS. We are using this plugin so that possible
+    // duplicated CSS from different components can be deduped.
+    new OptimizeCSSPlugin({ // 压缩 css
+      cssProcessorOptions: {
+        safe: true
+      }
+    }),
+    // split vendor js into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module, count) {
+        // any required modules inside node_modules are extracted to vendor
+        // console.log('module==', module);
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(path.join(__dirname, '../node_modules')) === 0
+        )
+      }
+    }),
+    // extract webpack runtime and module manifest to its own file in order to
+    // prevent vendor hash from being updated whenever app bundle is updated
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: ['vendor']
+    }),
+    // copy custom static assets
+    new CopyWebpackPlugin([ // 复制静态文件
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.build.assetsSubDirectory,
+        ignore: ['.*']
+      }
+    ]),
    ],
-})
+});
+
+if (config.build.productionGzip) { // 是否添加压缩文件
+  var CompressionWebpackPlugin = require('compression-webpack-plugin')
+
+  webpackConfig.plugins.push(
+    new CompressionWebpackPlugin({
+      asset: '[path].gz[query]', // 地址
+      algorithm: 'gzip', // 压缩方式
+      test: new RegExp( // 哪些需要压缩
+        '\\.(' +
+        config.build.productionGzipExtensions.join('|') +
+        ')$'
+      ),
+      threshold: 10240, // 最大限值
+      minRatio: 0.8, // 压缩比例
+    })
+  )
+}
+
+if (config.build.bundleAnalyzerReport) { // 是否需要打包分析报告
+  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig;

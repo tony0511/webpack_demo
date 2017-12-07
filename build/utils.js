@@ -35,7 +35,7 @@ exports.cssLoaders = function (options) {
     // Extract CSS when that option is specified
     // (which is the case during production build)
     if (options.extract) {
-      return ExtractTextPlugin.extract({
+      return ExtractTextPlugin.extract({ // 提取 css 部分
         use: loaders,
         // fallback: 'vue-style-loader', // 针对 vue 使用的 loader
         fallback: 'style-loader', // 针对普通 style 标签使用的 loader
@@ -69,6 +69,5 @@ exports.styleLoaders = function (options) {
       use: loader
     })
   }
-  console.log(JSON.stringify(output));
-  return output
+  return output;
 }

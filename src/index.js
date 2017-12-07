@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import './style.css';
+// import './style.min.css';
 import './style.scss';
 import './style.less';
 import Edit from './edit.png';
@@ -8,10 +9,11 @@ import printMe from './print';
 import path from 'path';
 // import webpack from 'webpack';
 
-// console.log(webpack.optimize.UglifyJsPlugin);
-
 console.log(path);
 console.log(path.join('assets', 'js/asm.js'));
+
+console.log('$===', $, jQuery);
+console.log('moment===', moment);
 
 function component() {
   var element = document.createElement('div');
@@ -21,6 +23,7 @@ function component() {
   // Lodash（目前通过一个 script 脚本引入）对于执行这一行是必需的
   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
   element.classList.add('hello');
+  element.classList.add('div1');
 
   // 将图像添加到 body 中。
   var myIcon = new Image();
@@ -41,6 +44,12 @@ function component() {
   // console.log('TWO==', TWO);
   // console.log('process==', BASE_API_TEST);
   // console.log('object===', object);
+
+  const divMin = document.createElement('div');
+  divMin.style.width = '200px';
+  divMin.style.height = '200px';
+  divMin.id = 'minDiv';
+  document.body.appendChild(divMin);
 
   return element;
 }

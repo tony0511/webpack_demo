@@ -20,11 +20,11 @@ module.exports = { // webpack 基本配置导出
     // print: './src/print.js' // 入口2 用于多页开发
   },
   output: { // 输出
-    filename: '[id].[name].[hash:6].[query].bundle.js', // 输出文件的文件名
+    path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
+    filename: '[name].js', // 输出文件的文件名
     // filename: '[chunkhash].bundle.js', // 输出文件的文件名
     // chunkFilename: '[hash].bundle.js',
     // path: path.resolve(__dirname, '../dist')
-    path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     // publicPath: bool() && process.env.NODE_ENV === 'production' // 该选项的值是以 runtime(运行时) 或 loader(载入时) 所创建的每个 URL 为前缀
     //   ? config.build.assetsPublicPath
     //   : config.dev.assetsPublicPath,
@@ -68,6 +68,11 @@ module.exports = { // webpack 基本配置导出
     }
   },
   plugins: [ // 添加插件
+    new webpack.ProvidePlugin({ // 通过 npm等 安装的插件
+      jQuery: "jquery",
+      $: "jquery",
+      moment: "moment",
+    }),
     // new CleanWebpackPlugin(['../dist']), // 打包前清除之前的文件
     new webpack.HotModuleReplacementPlugin(), // 模块热替换
     // new webpack.optimize.UglifyJsPlugin({
@@ -100,6 +105,15 @@ module.exports = { // webpack 基本配置导出
         loader 通常被用 ! 连写。这一写法在 webpack 2 中只在使用旧的选项 module.loaders 时才有效。
     */
     rules: [ // rules 也可以写成 loaders，但是 rules 是新的参数（对模块的源代码进行转换，类似于 gulp 的 task）
+      // {
+      //   test: /\.html$/,
+      //   use: [{
+      //     loader: 'html-loader',
+      //     options: {
+      //       minimize: false,
+      //      },
+      //   }],
+      // },
       {
         test: /\.js$/,
         loader: 'babel-loader',
