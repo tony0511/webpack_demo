@@ -10,7 +10,7 @@ function resolve (dir) { // 缩写目录
 // console.log(process.env.NODE_ENV);
 
 module.exports = { // webpack 基本配置导出
-  // context: path.resolve(__dirname, "../"), // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader（默认使用当前目录，但是推荐在配置中传递一个值。这使得你的配置独立于 CWD(current working directory - 当前执行路径)）
+  context: path.resolve(__dirname, "../"), // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader（默认使用当前目录，但是推荐在配置中传递一个值。这使得你的配置独立于 CWD(current working directory - 当前执行路径)）
   /*
     entry: './path/to/my/entry/file.js', 等价于 entry: { main: './path/to/my/entry/file.js' },
   */
@@ -25,7 +25,7 @@ module.exports = { // webpack 基本配置导出
     // filename: '[chunkhash].bundle.js', // 输出文件的文件名
     // chunkFilename: '[hash].bundle.js',
     // path: path.resolve(__dirname, '../dist')
-    // publicPath: bool() && process.env.NODE_ENV === 'production' // 该选项的值是以 runtime(运行时) 或 loader(载入时) 所创建的每个 URL 为前缀
+    // publicPath: process.env.NODE_ENV === 'production' // 该选项的值是以 runtime(运行时) 或 loader(载入时) 所创建的每个 URL 为前缀
     //   ? config.build.assetsPublicPath
     //   : config.dev.assetsPublicPath,
     /*
@@ -80,7 +80,7 @@ module.exports = { // webpack 基本配置导出
     //   // sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0),
     //   sourceMap: true,
     // }),
-    new webpack.DefinePlugin({ // 创建一个在编译时可以配置的全局常量
+    // new webpack.DefinePlugin({ // 创建一个在编译时可以配置的全局常量
       /*
         如果这个值是一个字符串，它会被当作一个代码片段来使用。
         如果这个值不是字符串，它会被转化为字符串(包括函数)。
@@ -93,7 +93,7 @@ module.exports = { // webpack 基本配置导出
       // TWO: "1+1", // 2
       // "typeof window": JSON.stringify("object"),
       // SELF_ENV: { NODE_ENV: '"development"', BASE_API: 'http://10.1.5.127:8092' },
-    }),
+    // }),
   ],
   module: {
     /*

@@ -12,8 +12,19 @@ import path from 'path';
 console.log(path);
 console.log(path.join('assets', 'js/asm.js'));
 
-console.log('$===', $, jQuery);
-console.log('moment===', moment);
+// console.log('$===', $, jQuery);
+// console.log('moment===', moment);
+
+$.ajax('/api_service/call/makeCall', {
+  type: 'POST',
+  data: {
+    businessId: '1212',
+    choice: 'sd==ll',
+  },
+  success(data, textStatus, xhr) {
+    console.log(data, textStatus, xhr);
+  },
+});
 
 function component() {
   var element = document.createElement('div');

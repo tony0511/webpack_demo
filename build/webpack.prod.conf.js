@@ -6,11 +6,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin'); // 用新生成的 ind
 const ExtractTextPlugin = require('extract-text-webpack-plugin'); // 提取相应的代码生成单独的文件（如css）
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin'); // 压缩 css 文件
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // 复制静态文件
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // 压缩 js 文件
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
 const utils = require('./utils');
 
-const webpackConfig = merge(baseWebpackConfig, {
+const prodWebpackConfig = merge(baseWebpackConfig, {
   entry: { // 入口起点
     app: './src/index.js', // 入口1
     // test: './src/test.js' // 入口2 用于多页开发
@@ -21,7 +22,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
     publicPath: config.build.assetsPublicPath,
   },
-  devtool: config.build.productionSourceMap ? '#source-map' : false,
+  devtool: config.build.productionSourceMap ? config.build.devtool : false,
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -29,9 +30,21 @@ const webpackConfig = merge(baseWebpackConfig, {
     })
   },
   plugins: [
-    new CleanWebpackPlugin(['dist/static/', 'dist/*.*'], { root: path.resolve(__dirname, '..') }), // 打包前清除之前的文件(需要重置根目录)
     new webpack.DefinePlugin({
-      'process.env': config.build.env,
+      'process.env': require('../config/prod.env'),
+    }),
+    new CleanWebpackPlugin(['dist/static/', 'dist/*.*'], { root: path.resolve(__dirname, '..') }), // 打包前清除之前的文件(需要重置根目录)
+    // new webpack.DefinePlugin({
+    //   'process.env': config.build.env,
+    // }),
+    new UglifyJsPlugin({ // 压缩 js 文件
+      uglifyOptions: {
+        compress: {
+          warnings: false
+        }
+      },
+      sourceMap: config.build.productionSourceMap,
+      parallel: true
     }),
     new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html
       // title: 'Output Management',
@@ -122,7 +135,7 @@ const webpackConfig = merge(baseWebpackConfig, {
 if (config.build.productionGzip) { // 是否添加压缩文件
   var CompressionWebpackPlugin = require('compression-webpack-plugin')
 
-  webpackConfig.plugins.push(
+  prodWebpackConfig.plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]', // 地址
       algorithm: 'gzip', // 压缩方式
@@ -139,7 +152,7 @@ if (config.build.productionGzip) { // 是否添加压缩文件
 
 if (config.build.bundleAnalyzerReport) { // 是否需要打包分析报告
   var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+  prodWebpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = webpackConfig;
+module.exports = prodWebpackConfig;
