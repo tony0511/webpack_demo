@@ -19,7 +19,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     // contentBase: './dist',
     clientLogLevel: 'warning',
     historyApiFallback: true,
-    hot: true, // 支持热更新(只更新改动的文件部分，而不是所有的文件重新构建)
+    hot: true, // 支持热更新(只更新改动的文件部分，而不是所有的文件重新构建) 注：只有添加 new webpack.HotModuleReplacementPlugin() 插件才能生效）
     compress: true,
     host: HOST || config.dev.host, // 域名
     port: PORT || config.dev.port, // 端口
@@ -33,6 +33,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
+    // inline 模式一般用于单页面应用开发，会自动将 socket 注入到页面代码中，多页模式一般设置为 false
+    // inline: true,
   },
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap }),
@@ -41,7 +43,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env'), // 此环境变量用于开发环境页面（编译过程不生效）
     }),
-    new webpack.HotModuleReplacementPlugin(), // 模块热替换
+    new webpack.HotModuleReplacementPlugin(), // 模块热替换（这样 devServer 中的 hot: true 才能生效）
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({

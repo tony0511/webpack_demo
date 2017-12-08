@@ -8,7 +8,16 @@ function resolve (dir) { // 缩写目录
   return path.join(__dirname, '..', dir)
 }
 
-// console.log(process.env.NODE_ENV);
+const createLintingRule = () => ({
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: !config.dev.showEslintErrorsInOverlay
+  }
+})
 
 module.exports = { // webpack 基本配置导出
   context: path.resolve(__dirname, "../"), // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader（默认使用当前目录，但是推荐在配置中传递一个值。这使得你的配置独立于 CWD(current working directory - 当前执行路径)）
@@ -59,7 +68,7 @@ module.exports = { // webpack 基本配置导出
       'static': path.resolve(__dirname, '../static')
     }
   },
-  plugins: [ // 添加插件
+  plugins: [ // 添加插件（注：相同的插件不要重复引入，否则会报错）
     new webpack.ProvidePlugin({ // 通过 npm等 安装的插件（添加全局变量）
       jQuery: "jquery",
       $: "jquery",
@@ -90,6 +99,7 @@ module.exports = { // webpack 基本配置导出
         loader 通常被用 ! 连写。这一写法在 webpack 2 中只在使用旧的选项 module.loaders 时才有效。
     */
     rules: [ // rules 也可以写成 loaders，但是 rules 是新的参数（对模块的源代码进行转换，类似于 gulp 的 task）
+      ...(config.dev.useEslint ? [createLintingRule()] : []),
       // {
       //   test: /\.html$/,
       //   use: [{

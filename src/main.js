@@ -6,13 +6,9 @@ import './style.less';
 import Edit from './edit.png';
 import Data from './data.xml';
 import printMe from './print';
-import path from 'path';
-
-console.log(path);
-console.log(path.join('assets', 'js/asm.js'));
 
 console.log('$===', $, jQuery);
-console.log('moment===', moment);
+// console.log('moment===', moment);
 
 $.ajax('/api_service/call/makeCall', {
   type: 'POST',
@@ -67,15 +63,3 @@ function component() {
 // document.body.appendChild(component());
 let element = component(); // 当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
 document.body.appendChild(element);
-
-console.log('module===', module);
-
-if (module.hot) {
-  module.hot.accept('./print', function() { // dep（依赖路径），callback（回调函数）
-    console.log('Accepting the updated printMe module!');
-    // printMe();
-    document.body.innerHTML = '';
-    element = component(); // 重新渲染页面后，component 更新 click 事件处理
-    document.body.appendChild(element);
-  })
-}
