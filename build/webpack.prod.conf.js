@@ -1,4 +1,6 @@
-const path = require('path'); // 路径管理插件
+process.env.NODE_ENV = 'production';
+
+const path = require('path'); // 路径管理插件（node的插件，直接使用）
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 打包前清除之前的文件
@@ -13,14 +15,14 @@ const utils = require('./utils');
 
 const prodWebpackConfig = merge(baseWebpackConfig, {
   entry: { // 入口起点
-    app: './src/index.js', // 入口1
+    app: './src/main.js', // 入口1
     // test: './src/test.js' // 入口2 用于多页开发
   },
   output: {
-    path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[hash].js'),
+    path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
+    filename: utils.assetsPath('js/[name].[hash].js'), // 输出文件的文件名
+    // filename: utils.assetsPath('js/[name].[chunkhash].js'),
     // chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
-    publicPath: config.build.assetsPublicPath,
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   module: {
@@ -31,12 +33,10 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': require('../config/prod.env'),
+      'process.env': require('../config/prod.env'), // 此环境变量用于生产环境页面（编译过程不生效）
     }),
-    new CleanWebpackPlugin(['dist/static/', 'dist/*.*'], { root: path.resolve(__dirname, '..') }), // 打包前清除之前的文件(需要重置根目录)
-    // new webpack.DefinePlugin({
-    //   'process.env': config.build.env,
-    // }),
+     // 打包前清除之前的文件(需要重置根目录) 注：build.js 已经删除了 static 目录，所以这里没有必要再次删除了
+    // new CleanWebpackPlugin(['dist/static/', 'dist/*.*'], { root: path.resolve(__dirname, '..') }),
     new UglifyJsPlugin({ // 压缩 js 文件
       uglifyOptions: {
         compress: {
@@ -46,20 +46,20 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
       sourceMap: config.build.productionSourceMap,
       parallel: true
     }),
-    new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html
+    new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html（见下面介绍）
       // title: 'Output Management',
       filename: config.build.index,
       template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
+      inject: true, // 是否要把所有的资产注入到给定的 html 中
+      minify: { // 传递HTML-minifier的选项对象来缩小输出
+        removeComments: true, // 去除注释
+        collapseWhitespace: true, // 去掉空格
+        removeAttributeQuotes: true, // 去掉引用
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency',
+      chunksSortMode: 'dependency', // 块的排序方式依靠依赖的顺序进行排序
       /*
       HtmlWebpackPlugin 配置：
         title：用于生成的HTML文档的标题。
@@ -93,15 +93,26 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
     // }),
     // extract css into its own file
     new ExtractTextPlugin({ // 生成独立的 css 文件
-      filename: utils.assetsPath('css/[name].[contenthash].css')
+      filename: utils.assetsPath('css/[name].[contenthash].css'),
+      // set the following option to `true` if you want to extract CSS from
+      // codesplit chunks into this main css file as well.
+      // This will result in *all* of your app's CSS being loaded upfront.
+      allChunks: false,
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({ // 压缩 css
-      cssProcessorOptions: {
-        safe: true
-      }
+      // cssProcessorOptions: {
+      //   safe: true
+      // }
+      cssProcessorOptions: config.build.productionSourceMap
+        ? { safe: true, map: { inline: false } }
+        : { safe: true },
     }),
+    // keep module.id stable when vender modules does not change
+    new webpack.HashedModuleIdsPlugin(),
+    // enable scope hoisting
+    new webpack.optimize.ModuleConcatenationPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -129,6 +140,15 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
+    // This instance extracts shared chunks from code splitted chunks and bundles them
+    // in a separate chunk, similar to the vendor chunk
+    // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      async: 'vendor-async',
+      children: true,
+      minChunks: 3
+    }),
    ],
 });
 

@@ -2,6 +2,7 @@ const path = require('path'); // 路径管理插件
 // const CleanWebpackPlugin = require('clean-webpack-plugin'); // 打包前清除之前的文件
 const webpack = require('webpack');
 const config = require('../config');
+const utils = require('./utils');
 
 function resolve (dir) { // 缩写目录
   return path.join(__dirname, '..', dir)
@@ -16,18 +17,15 @@ module.exports = { // webpack 基本配置导出
   */
   // entry: './src/index.js', // 单个入口
   entry: { // 入口起点
-    app: './src/index.js', // 入口1
+    app: './src/main.js', // 入口1
     // print: './src/print.js' // 入口2 用于多页开发
   },
   output: { // 输出
     path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     filename: '[name].js', // 输出文件的文件名
-    // filename: '[chunkhash].bundle.js', // 输出文件的文件名
-    // chunkFilename: '[hash].bundle.js',
-    // path: path.resolve(__dirname, '../dist')
-    // publicPath: process.env.NODE_ENV === 'production' // 该选项的值是以 runtime(运行时) 或 loader(载入时) 所创建的每个 URL 为前缀
-    //   ? config.build.assetsPublicPath
-    //   : config.dev.assetsPublicPath,
+    publicPath: process.env.NODE_ENV === 'production' // 该选项的值是以 runtime(运行时) 或 loader(载入时) 所创建的每个 URL 为前缀
+      ? config.build.assetsPublicPath
+      : config.dev.assetsPublicPath,
     /*
       [name]：使用入口名称
       [id]：使用内部 chunk id
@@ -45,12 +43,6 @@ module.exports = { // webpack 基本配置导出
       [resource-path]：不带任何查询参数，用于解析文件的路径
     */
   },
-  // devtool: 'inline-source-map', // 用于追踪到错误和警告在源代码中的原始位置（注：不要用于生产环境）
-  // devServer: { // 自动刷新浏览器（使用 webpack-dev-server 插件）
-  //   contentBase: './dist',
-  //   hot: true, // 支持热更新(只更新改动的文件部分，而不是所有的文件重新构建)
-  //   port: 8082, // 端口
-  // },
   resolve: { // 模块路径配置(解析选项)
     extensions: ['.js', '.vue', '.json', '.ts'], // 忽略某些文件类型拓展名
     alias: { // 指定某些的路径的简写
@@ -68,18 +60,11 @@ module.exports = { // webpack 基本配置导出
     }
   },
   plugins: [ // 添加插件
-    new webpack.ProvidePlugin({ // 通过 npm等 安装的插件
+    new webpack.ProvidePlugin({ // 通过 npm等 安装的插件（添加全局变量）
       jQuery: "jquery",
       $: "jquery",
       moment: "moment",
     }),
-    // new CleanWebpackPlugin(['../dist']), // 打包前清除之前的文件
-    new webpack.HotModuleReplacementPlugin(), // 模块热替换
-    // new webpack.optimize.UglifyJsPlugin({
-    //   // sourceMap 方便 debug 和运行基准测试，webpack 可以在 bundle 中生成内联的 source map 或生成到独立文件。
-    //   // sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0),
-    //   sourceMap: true,
-    // }),
     // new webpack.DefinePlugin({ // 创建一个在编译时可以配置的全局常量
       /*
         如果这个值是一个字符串，它会被当作一个代码片段来使用。
@@ -115,12 +100,12 @@ module.exports = { // webpack 基本配置导出
       //   }],
       // },
       {
-        test: /\.js$/,
+        test: /\.js$/, // js 文件处理
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src'), resolve('test')],
       },
       {
-        test: /\.tsx?$/,
+        test: /\.tsx?$/, // typeScript 文件处理
         loader: 'ts-loader',
         include: [resolve('src'), resolve('test')],
         options: { transpileOnly: false },
@@ -128,24 +113,36 @@ module.exports = { // webpack 基本配置导出
       /* file-loader：文件保留，使用文件名
          url-loader： 文件转换成代码，如图片转换成 base64 格式 */
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ['url-loader']
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/, // 图片处理
+        loader: 'url-loader',
+        options: {
+          limit: 10000, // 上线不能查过 10000 bytes
+          name: utils.assetsPath('img/[name].[hash:7].[ext]'),
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/, // 音视频处理
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('media/[name].[hash:7].[ext]'),
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/, // 字体处理
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
+        }
       },
       // {
-      //   test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-      //   loader: 'url-loader',
-      //   options: {
-      //     limit: 10000,
-      //     name: utils.assetsPath('img/[name].[hash:7].[ext]')
-      //   }
+      //   test: /\.(png|svg|jpg|gif)$/,
+      //   use: ['url-loader']
       // },
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: ['url-loader']
-      },
-      {
-        test: /\.xml$/,
-        use: ['xml-loader']
+        test: /\.xml$/, // xml 文件处理
+        use: ['xml-loader'],
       },
     ]
   }

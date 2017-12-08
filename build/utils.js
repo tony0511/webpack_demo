@@ -2,7 +2,6 @@ const path = require('path');
 const config = require('../config');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-console.log('process.env.NODE_ENV==', process.env.NODE_ENV);
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
@@ -14,7 +13,7 @@ exports.assetsPath = function (_path) {
 exports.cssLoaders = function (options) {
   options = options || {};
 
-  const cssLoader = {
+  const cssLoader = { // 处理 css
     loader: 'css-loader',
     options: {
       minimize: process.env.NODE_ENV === 'production',
@@ -22,14 +21,14 @@ exports.cssLoaders = function (options) {
     }
   }
 
-  const postcssLoader = {
+  const postcssLoader = { // 处理 postcss
     loader: 'postcss-loader',
     options: {
       sourceMap: options.sourceMap,
     }
   }
   // generate loader string to be used with extract text plugin
-  function generateLoaders (loader, loaderOptions) {
+  function generateLoaders (loader, loaderOptions) { // 处理其他 css
     // var loaders = [cssLoader]
     const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader];
 
@@ -80,4 +79,22 @@ exports.styleLoaders = function (options) {
     })
   }
   return output;
+}
+
+exports.createNotifierCallback = () => {
+  const notifier = require('node-notifier')
+
+  return (severity, errors) => {
+    if (severity !== 'error') return
+
+    const error = errors[0]
+    const filename = error.file && error.file.split('!').pop()
+
+    notifier.notify({
+      title: packageConfig.name,
+      message: severity + ': ' + error.name,
+      subtitle: filename || '',
+      icon: path.join(__dirname, 'editDisabled.png'),
+    })
+  }
 }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import './style.css';
 // import './style.min.css';
 import './style.scss';
@@ -7,13 +7,12 @@ import Edit from './edit.png';
 import Data from './data.xml';
 import printMe from './print';
 import path from 'path';
-// import webpack from 'webpack';
 
 console.log(path);
 console.log(path.join('assets', 'js/asm.js'));
 
-// console.log('$===', $, jQuery);
-// console.log('moment===', moment);
+console.log('$===', $, jQuery);
+console.log('moment===', moment);
 
 $.ajax('/api_service/call/makeCall', {
   type: 'POST',
@@ -32,7 +31,7 @@ function component() {
   // console.log(element.classList);
 
   // Lodash（目前通过一个 script 脚本引入）对于执行这一行是必需的
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+  element.innerHTML = 'Hello webpack';
   element.classList.add('hello');
   element.classList.add('div1');
 
@@ -48,7 +47,7 @@ function component() {
   btn.onclick = printMe;
   document.body.appendChild(btn);
 
-  console.log('PRODUCTION==', process.env);
+  console.log('PRODUCTION似懂撒多非懂==', process.env);
   // console.log('PRODUCTION==', PRODUCTION);
   // console.log('VERSION==', VERSION);
   // console.log('BROWSER_SUPPORTS_HTML5==', BROWSER_SUPPORTS_HTML5);
