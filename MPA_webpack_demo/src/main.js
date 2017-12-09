@@ -22,8 +22,8 @@ $.ajax('/api_service/call/makeCall', {
 });
 
 function component() {
-  var element = document.createElement('div');
-  var btn = document.createElement('button');
+  const element = document.createElement('div');
+  const btn = document.createElement('button');
   // console.log(element.classList);
 
   // Lodash（目前通过一个 script 脚本引入）对于执行这一行是必需的
@@ -32,7 +32,7 @@ function component() {
   element.classList.add('div1');
 
   // 将图像添加到 body 中。
-  var myIcon = new Image();
+  const myIcon = new Image();
   myIcon.src = Edit;
   document.body.appendChild(myIcon);
 
@@ -61,5 +61,5 @@ function component() {
 }
 
 // document.body.appendChild(component());
-let element = component(); // 当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
+const element = component(); // 当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
 document.body.appendChild(element);
