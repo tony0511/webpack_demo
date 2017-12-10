@@ -3,7 +3,7 @@ var path = require('path')
 
 module.exports = {
   build: { // 生产环境配置
-    index: path.resolve(__dirname, '../dist/index.html'), // 输出index页面位置
+    pagesRoot: path.resolve(__dirname, '../src/pages'), // 输出index页面位置
     assetsRoot: path.resolve(__dirname, '../dist'), // 所有有文件存放的根目录
     assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录
     assetsPublicPath: '/dist/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src。

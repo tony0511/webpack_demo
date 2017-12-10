@@ -3,6 +3,7 @@ const path = require('path'); // 路径管理插件
 const webpack = require('webpack');
 const config = require('../config');
 const utils = require('./utils');
+const htmlPagesConfig = require('../config/htmlpage.config');
 
 function resolve (dir) { // 缩写目录
   return path.join(__dirname, '..', dir)
@@ -25,10 +26,11 @@ module.exports = { // webpack 基本配置导出
     entry: './path/to/my/entry/file.js', 等价于 entry: { main: './path/to/my/entry/file.js' },
   */
   // entry: './src/index.js', // 单个入口
-  entry: { // 入口起点
-    app: './src/main.js', // 入口1
-    // print: './src/print.js' // 入口2 用于多页开发
-  },
+  // entry: { // 入口起点
+  //   app: './src/main.js', // 入口1
+  //   // print: './src/print.js' // 入口2 用于多页开发
+  // },
+  entry: utils.getEntry(htmlPagesConfig.htmlPages),
   output: { // 输出
     path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     filename: '[name].js', // 输出文件的文件名
@@ -69,6 +71,7 @@ module.exports = { // webpack 基本配置导出
     }
   },
   plugins: [ // 添加插件（注：相同的插件不要重复引入，否则会报错）
+    ...utils.getPagesPlugins(htmlPagesConfig.htmlPages),
     new webpack.ProvidePlugin({ // 通过 npm等 安装的插件（添加全局变量）
       jQuery: "jquery",
       $: "jquery",

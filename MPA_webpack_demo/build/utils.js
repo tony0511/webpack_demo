@@ -1,6 +1,7 @@
 const path = require('path');
 const config = require('../config');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // 用新生成的 index.html 文件替换原来的 index.html
 
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
@@ -81,14 +82,78 @@ exports.styleLoaders = function (options) {
   return output;
 }
 
+exports.getEntry = function (htmlPages){ // 入口
+  if(!htmlPages) {
+    return {};
+  }
+  const entry = {};
+  for(let i = 0, pagesLen = htmlPages.length; i < pagesLen; i++) {
+    const pageName = htmlPages[i].template.split('.')[0];
+    const chunk = htmlPages[i].chunks;
+    for(let j = 0, jsLen = chunk.length; j < jsLen; j++) {
+      entry[chunk[j]] = path.join(config.build.pagesRoot, pageName, chunk[j] + '.js');
+    }
+  }
+  // console.log(entry);
+
+  return entry;
+}
+
+exports.getPagesPlugins = function (htmlPages){ // 多页插件导出
+  if(!htmlPages) {
+    return [];
+  }
+  let pagesPlugins = [];
+  for(let i = 0, len = htmlPages.length; i < len; i++) {
+    const pageName = htmlPages[i].template.split('.')[0];
+    pagesPlugins.push(new HtmlWebpackPlugin({
+      template: path.join(config.build.pagesRoot, pageName, htmlPages[i].template),
+      filename: htmlPages[i].template.substr(htmlPages[i].template.lastIndexOf('/')+1),
+      chunks: htmlPages[i].chunks.concat(process.env.NODE_ENV === 'production' ? ['vendor', 'manifest'] : []),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true, // 去掉引用
+        collapseBooleanAttributes: true,
+        removeEmptyAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        minifyJS: true,
+        minifyCSS: true,
+      },
+      //暂时不要这种hash算法
+      //hash: true
+      /*
+      HtmlWebpackPlugin 配置：
+        title：用于生成的HTML文档的标题。
+        filename：将HTML写入的文件。默认为index.html。你也可以在这里指定一个子目录（例如：）assets/admin.html。
+        template：Webpack需要路径到模板。有关详细信息，请参阅文档。
+        inject：true | 'head' | 'body' | false注入所有的资产到给定template或templateContent- 当传递true或'body'所有JavaScript资源将被放置在身体元素的底部。'head'将脚本放在head元素中。
+        favicon：将给定的图标路径添加到输出html。
+        minify：{...} | false传递HTML-minifier的选项对象来缩小输出。
+        hash：true | false如果true然后附加一个独特的webpack编译哈希到所有包含的脚本和CSS文件。这对缓存清除非常有用。
+        cache：true | false如果true（默认）尝试仅在文件被更改时才发出文件。
+        showErrors：true | false如果true（默认）错误细节将被写入HTML页面。
+        chunks：允许你只添加一些块（例如，只有单元测试块）
+        chunksSortMode：允许在包含到html之前控制如何对块进行排序。允许的值：'none'| 'auto'| 'dependency(依赖)'|'manual(手动)'| {function} - 默认：'auto'
+        excludeChunks：允许你跳过一些块（例如，不要添加单元测试块）
+        xhtml：true | false如果true将link标签呈现为自动关闭，则符合XHTML。默认是false
+      */
+    }));
+  }
+  
+  return pagesPlugins;
+}
+
 exports.createNotifierCallback = () => {
-  const notifier = require('node-notifier')
+  const notifier = require('node-notifier');
 
   return (severity, errors) => {
-    if (severity !== 'error') return
+    if (severity !== 'error') return;
 
-    const error = errors[0]
-    const filename = error.file && error.file.split('!').pop()
+    const error = errors[0];
+    const filename = error.file && error.file.split('!').pop();
+    const packageConfig = require('../package.json');
 
     notifier.notify({
       title: packageConfig.name,

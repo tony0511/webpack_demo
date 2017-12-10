@@ -14,10 +14,10 @@ const config = require('../config');
 const utils = require('./utils');
 
 const prodWebpackConfig = merge(baseWebpackConfig, {
-  entry: { // 入口起点
-    app: './src/main.js', // 入口1
-    // test: './src/test.js' // 入口2 用于多页开发
-  },
+  // entry: { // 入口起点
+  //   app: './src/main.js', // 入口1
+  //   // test: './src/test.js' // 入口2 用于多页开发
+  // },
   output: {
     path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     filename: utils.assetsPath('js/[name].[chunkhash].js'), // 输出文件的文件名
@@ -45,37 +45,21 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
       sourceMap: config.build.productionSourceMap,
       parallel: true
     }),
-    new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html（见下面介绍）
-      // title: 'Output Management',
-      filename: config.build.index,
-      template: 'index.html',
-      inject: true, // 是否要把所有的资产注入到给定的 html 中
-      minify: { // 传递HTML-minifier的选项对象来缩小输出
-        removeComments: true, // 去除注释
-        collapseWhitespace: true, // 去掉空格
-        removeAttributeQuotes: true, // 去掉引用
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency', // 块的排序方式依靠依赖的顺序进行排序
-      /*
-      HtmlWebpackPlugin 配置：
-        title：用于生成的HTML文档的标题。
-        filename：将HTML写入的文件。默认为index.html。你也可以在这里指定一个子目录（例如：）assets/admin.html。
-        template：Webpack需要路径到模板。有关详细信息，请参阅文档。
-        inject：true | 'head' | 'body' | false注入所有的资产到给定template或templateContent- 当传递true或'body'所有JavaScript资源将被放置在身体元素的底部。'head'将脚本放在head元素中。
-        favicon：将给定的图标路径添加到输出html。
-        minify：{...} | false传递HTML-minifier的选项对象来缩小输出。
-        hash：true | false如果true然后附加一个独特的webpack编译哈希到所有包含的脚本和CSS文件。这对缓存清除非常有用。
-        cache：true | false如果true（默认）尝试仅在文件被更改时才发出文件。
-        showErrors：true | false如果true（默认）错误细节将被写入HTML页面。
-        chunks：允许你只添加一些块（例如，只有单元测试块）
-        chunksSortMode：允许在包含到html之前控制如何对块进行排序。允许的值：'none'| 'auto'| 'dependency(依赖)'|'manual(手动)'| {function} - 默认：'auto'
-        excludeChunks：允许你跳过一些块（例如，不要添加单元测试块）
-        xhtml：true | false如果true将link标签呈现为自动关闭，则符合XHTML。默认是false
-      */
-    }),
+    // new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html（见下面介绍）
+    //   // title: 'Output Management',
+    //   filename: config.build.index,
+    //   template: 'index.html',
+    //   inject: true, // 是否要把所有的资产注入到给定的 html 中
+    //   minify: { // 传递HTML-minifier的选项对象来缩小输出
+    //     removeComments: true, // 去除注释
+    //     collapseWhitespace: true, // 去掉空格
+    //     removeAttributeQuotes: true, // 去掉引用
+    //     // more options:
+    //     // https://github.com/kangax/html-minifier#options-quick-reference
+    //   },
+    //   // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+    //   chunksSortMode: 'dependency', // 块的排序方式依靠依赖的顺序进行排序
+    // }),
     // new webpack.optimize.UglifyJsPlugin({
     //   // sourceMap 方便 debug 和运行基准测试，webpack 可以在 bundle 中生成内联的 source map 或生成到独立文件。
     //   // sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0),
