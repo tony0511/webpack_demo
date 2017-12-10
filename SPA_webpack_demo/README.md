@@ -1,1 +1,1 @@
-# webpack_demo
+# SPA_webpack_demo
