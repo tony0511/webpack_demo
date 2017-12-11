@@ -7,6 +7,10 @@ import Edit from './edit.png';
 import Data from './data.xml';
 import printMe from './print';
 
+if (process.env.NODE_ENV !== 'production') { // 在开发环境时候需要实时刷新 html 文件
+  require('./index.html');
+}
+
 console.log('$===', $, jQuery);
 // console.log('moment===', moment);
 

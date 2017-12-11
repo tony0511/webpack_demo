@@ -37,7 +37,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     // inline: true,
   },
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap }),
+    rules: [
+      ...utils.styleLoaders({ sourceMap: config.dev.cssSourceMap }),
+      {
+        test: /\.html$/,
+        loader: 'raw-loader', // loaders: ['raw-loader'] is also perfectly acceptable.
+      },
+    ],
   },
    plugins: [
     new webpack.DefinePlugin({

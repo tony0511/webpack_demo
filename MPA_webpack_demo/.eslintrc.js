@@ -50,5 +50,6 @@ module.exports = {
     'no-mixed-operators': 0, // 使用混合操作符
     'no-nested-ternary': 0, // 使用嵌套的三元表达式
     'camelcase': 0, // 不强制使用驼峰命名法（有时候需要使用下划线_分隔）
+    'global-require': 0, // require 不强制一定要出现在顶层作用域中
   }
 }
