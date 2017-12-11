@@ -26,15 +26,16 @@ module.exports = {
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8082, // 开发环境端口配置
     autoOpenBrowser: false, // 是否需要自定启动浏览器
-    errorOverlay: true,
+    errorOverlay: true, // 当编译器有错误或警告时是否需要浏览器全屏覆盖显示
     notifyOnErrors: true, // 前端服务异常是否需要显示异常内容
-    poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+    poll: false, // 是否使用轮询，https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
     assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录
     assetsPublicPath: '/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src。
     devtool: '#cheap-module-eval-source-map', // sourceMap 方式
     proxyTable: { // 接口访问代理配置
       '/api_service/': {
         target: 'http://10.0.4.72:8092',
+        // secure: false, // 使用 https ，并使用了无效证书的后端服务器时候可能要用上
         pathRewrite: {
           '^/api_service/': '/'
         },

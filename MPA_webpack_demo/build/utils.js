@@ -69,6 +69,11 @@ exports.cssLoaders = function (options) {
 }
 
 // Generate loaders for standalone style files (outside of .vue)
+/*
+  sass-loader、less-loader：将 Sass 或 less 编译成 CSS
+  css-loader：将 CSS 转化成 CommonJS 模块
+  style-loader： 将 JS 字符串生成为 style 节点
+*/
 exports.styleLoaders = function (options) {
   var output = []
   var loaders = exports.cssLoaders(options)

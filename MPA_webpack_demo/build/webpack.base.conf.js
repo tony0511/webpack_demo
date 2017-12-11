@@ -57,7 +57,7 @@ module.exports = { // webpack 基本配置导出
   resolve: { // 解析
     extensions: ['.js', '.vue', '.json', '.ts'], // 忽略某些文件类型拓展名
     alias: { // 指定某些的路径的简写
-      'vue$': 'vue/dist/vue.esm.js',
+      'vue$': 'vue/dist/vue.esm.js', // 精确路径
       '@': resolve('src'),
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
@@ -68,7 +68,9 @@ module.exports = { // webpack 基本配置导出
       'store': path.resolve(__dirname, '../src/store'),
       'router': path.resolve(__dirname, '../src/router'),
       'static': path.resolve(__dirname, '../static')
-    }
+    },
+    // // webpack 解析模块时应该搜索的目录（默认为['node_modules']）
+    // modules: [path.resolve(__dirname, "src"), "node_modules"],
   },
   plugins: [ // 添加插件（注：相同的插件不要重复引入，否则会报错）
     ...utils.getPagesPlugins(htmlPagesConfig.htmlPages), // 各个页面插件加入
