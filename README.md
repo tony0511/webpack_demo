@@ -9,4 +9,5 @@ yarn dev
 
 # build for production with minification
 yarn build
+
 (提示：正式开发把 config/index.js/build.assetsPublicPath 的值 /dist/ 改为 /)
