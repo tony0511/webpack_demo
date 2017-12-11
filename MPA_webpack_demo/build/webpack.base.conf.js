@@ -12,7 +12,7 @@ function resolve (dir) { // 缩写目录
 const createLintingRule = () => ({
   test: /\.(js|vue)$/,
   loader: 'eslint-loader',
-  enforce: 'pre',
+  enforce: 'pre', // 指定 loader 种类（所有 loader 通过 后置-post, 行内, 普通, 前置-pre 排序，并按此顺序使用，默认为 普通）
   include: [resolve('src'), resolve('test')],
   options: {
     formatter: require('eslint-friendly-formatter'),
@@ -54,7 +54,7 @@ module.exports = { // webpack 基本配置导出
       [resource-path]：不带任何查询参数，用于解析文件的路径
     */
   },
-  resolve: { // 模块路径配置(解析选项)
+  resolve: { // 解析
     extensions: ['.js', '.vue', '.json', '.ts'], // 忽略某些文件类型拓展名
     alias: { // 指定某些的路径的简写
       'vue$': 'vue/dist/vue.esm.js',
@@ -108,7 +108,7 @@ module.exports = { // webpack 基本配置导出
         use: [{
           // raw-loader 不会处理 src，只是将 html 文件转换成字符串，但是 html-loader 不仅可以将 html 文件转换成字符串，而且还可以处理 src
           loader: 'html-loader',
-          options: {
+          options: { // 或可以使用 query 名称
             // minimize: false,
             attrs: ['img:src', 'audio:src', 'video:src', 'source:src'], // 拓展一些需要处理的 src，默认只有 'img:src'
           },
@@ -122,7 +122,7 @@ module.exports = { // webpack 基本配置导出
       {
         test: /\.tsx?$/, // typeScript 文件处理
         loader: 'ts-loader',
-        include: [resolve('src'), resolve('test')],
+        include: [resolve('src'), resolve('test')], // 会处理的目录
         options: { transpileOnly: false },
       },
       /* file-loader：文件保留，使用文件名

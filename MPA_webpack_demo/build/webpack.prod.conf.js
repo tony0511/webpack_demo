@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'production';
 
+// 注：如果在页面中使用到了编译的依赖会导致 chunkhash 使用不了
+
 const path = require('path'); // 路径管理插件（node的插件，直接使用）
 const merge = require('webpack-merge');
 const webpack = require('webpack');
@@ -21,7 +23,7 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     filename: utils.assetsPath('js/[name].[chunkhash].js'), // 输出文件的文件名
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'), // 注：如果在页面中使用到了编译的依赖会导致 chunkhash 使用不了
+    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'), // 决定了非入口(non-entry) chunk 文件的名称
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   module: {
