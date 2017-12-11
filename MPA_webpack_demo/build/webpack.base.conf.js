@@ -30,7 +30,7 @@ module.exports = { // webpack 基本配置导出
   //   app: './src/main.js', // 入口1
   //   // print: './src/print.js' // 入口2 用于多页开发
   // },
-  entry: utils.getEntry(htmlPagesConfig.htmlPages),
+  entry: utils.getEntry(htmlPagesConfig.htmlPages), // 入口
   output: { // 输出
     path: config.build.assetsRoot, // 目标输出目录 path 的绝对路径
     filename: '[name].js', // 输出文件的文件名
@@ -71,7 +71,7 @@ module.exports = { // webpack 基本配置导出
     }
   },
   plugins: [ // 添加插件（注：相同的插件不要重复引入，否则会报错）
-    ...utils.getPagesPlugins(htmlPagesConfig.htmlPages),
+    ...utils.getPagesPlugins(htmlPagesConfig.htmlPages), // 各个页面插件加入
     new webpack.ProvidePlugin({ // 通过 npm等 安装的插件（添加全局变量）
       jQuery: "jquery",
       $: "jquery",
@@ -102,7 +102,7 @@ module.exports = { // webpack 基本配置导出
         loader 通常被用 ! 连写。这一写法在 webpack 2 中只在使用旧的选项 module.loaders 时才有效。
     */
     rules: [ // rules 也可以写成 loaders，但是 rules 是新的参数（对模块的源代码进行转换，类似于 gulp 的 task）
-      ...(config.dev.useEslint ? [createLintingRule()] : []),
+      ...(config.dev.useEslint ? [createLintingRule()] : []), // 添加 eslint 检查
       // {
       //   test: /\.html$/,
       //   use: [{

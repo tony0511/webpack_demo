@@ -82,7 +82,7 @@ exports.styleLoaders = function (options) {
   return output;
 }
 
-exports.getEntry = function (htmlPages){ // 入口
+exports.getEntry = function (htmlPages){ // js 入口导出
   if(!htmlPages) {
     return {};
   }
@@ -107,15 +107,15 @@ exports.getPagesPlugins = function (htmlPages){ // 多页插件导出
   for(let i = 0, len = htmlPages.length; i < len; i++) {
     const pageName = htmlPages[i].template.split('.')[0];
     pagesPlugins.push(new HtmlWebpackPlugin({
-      template: path.join(config.build.pagesRoot, pageName, htmlPages[i].template),
-      filename: htmlPages[i].template.substr(htmlPages[i].template.lastIndexOf('/')+1),
-      chunks: htmlPages[i].chunks.concat(process.env.NODE_ENV === 'production' ? ['vendor', 'manifest'] : []),
+      template: path.join(config.build.pagesRoot, pageName, htmlPages[i].template), // 页面模板
+      filename: htmlPages[i].template.substr(htmlPages[i].template.lastIndexOf('/')+1), // 页面路径
+      chunks: htmlPages[i].chunks.concat(process.env.NODE_ENV === 'production' ? ['vendor', 'manifest'] : []), // 页面用到的 js 的 chunk
       minify: {
-        removeComments: true,
-        collapseWhitespace: true,
+        removeComments: true, // 去掉注释
+        collapseWhitespace: true, // 去除空格
         removeAttributeQuotes: true, // 去掉引用
         collapseBooleanAttributes: true,
-        removeEmptyAttributes: true,
+        removeEmptyAttributes: true, // 去除空属性
         removeScriptTypeAttributes: true,
         removeStyleLinkTypeAttributes: true,
         minifyJS: true,
