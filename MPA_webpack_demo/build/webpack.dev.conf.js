@@ -39,10 +39,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: [
       ...utils.styleLoaders({ sourceMap: config.dev.cssSourceMap }),
-      {
-        test: /\.html$/,
-        loader: 'raw-loader', // loaders: ['raw-loader'] is also perfectly acceptable.
-      },
+      // {
+      //   test: /\.html$/, // 添加 html 文件解析依赖
+      //   // raw-loader 不会处理 src，只是将 html 文件转换成字符串，但是 html-loader 不仅可以将 html 文件转换成字符串，而且还可以处理 src
+      //   // loader: 'raw-loader', // loaders: ['raw-loader'] is also perfectly acceptable.
+      //   loader: 'html-loader',
+      // },
     ],
   },
    plugins: [

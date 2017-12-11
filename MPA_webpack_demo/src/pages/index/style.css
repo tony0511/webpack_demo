@@ -1,11 +1,14 @@
 @font-face {
   font-family: 'MyFont';
-  src: url('./Hum521l.ttf') format('ttf');
+  src: url('./Hum521l.ttf');
   font-weight: 600;
   font-style: normal;
 }
 .hello {
   color: blue;
   background-image: url('./edit.png');
+  font-family: 'MyFont';
+}
+.anotherFont{
   font-family: 'MyFont';
 }

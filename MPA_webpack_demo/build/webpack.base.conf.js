@@ -103,15 +103,17 @@ module.exports = { // webpack 基本配置导出
     */
     rules: [ // rules 也可以写成 loaders，但是 rules 是新的参数（对模块的源代码进行转换，类似于 gulp 的 task）
       ...(config.dev.useEslint ? [createLintingRule()] : []), // 添加 eslint 检查
-      // {
-      //   test: /\.html$/,
-      //   use: [{
-      //     loader: 'html-loader',
-      //     options: {
-      //       minimize: false,
-      //      },
-      //   }],
-      // },
+      {
+        test: /\.html$/, // html 文件处理
+        use: [{
+          // raw-loader 不会处理 src，只是将 html 文件转换成字符串，但是 html-loader 不仅可以将 html 文件转换成字符串，而且还可以处理 src
+          loader: 'html-loader',
+          options: {
+            // minimize: false,
+            attrs: ['img:src', 'audio:src', 'video:src', 'source:src'], // 拓展一些需要处理的 src，默认只有 'img:src'
+          },
+        }],
+      },
       {
         test: /\.js$/, // js 文件处理
         loader: 'babel-loader',
@@ -129,30 +131,26 @@ module.exports = { // webpack 基本配置导出
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/, // 图片处理
         loader: 'url-loader',
         options: {
-          limit: 10000, // 上线不能查过 10000 bytes
-          name: utils.assetsPath('img/[name].[hash:7].[ext]'),
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          name: utils.assetsPath('img/[name].[hash:10].[ext]'),
         }
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/, // 音视频处理
         loader: 'url-loader',
         options: {
-          limit: 10000,
-          name: utils.assetsPath('media/[name].[hash:7].[ext]'),
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          name: utils.assetsPath('media/[name].[hash:10].[ext]'),
         }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/, // 字体处理
         loader: 'url-loader',
         options: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]'),
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          name: utils.assetsPath('fonts/[name].[hash:10].[ext]'),
         }
       },
-      // {
-      //   test: /\.(png|svg|jpg|gif)$/,
-      //   use: ['url-loader']
-      // },
       {
         test: /\.xml$/, // xml 文件处理
         use: ['xml-loader'],

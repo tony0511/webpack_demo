@@ -4,12 +4,14 @@ import './style.css';
 import './style.scss';
 import './style.less';
 import Edit from './edit.png';
+import audioTest from './1512287918.391.mp3';
 import Data from './data.xml';
 import printMe from './print';
+import './index.html';
 
-if (process.env.NODE_ENV !== 'production') { // 在开发环境时候需要实时刷新 html 文件
-  require('./index.html');
-}
+// if (process.env.NODE_ENV !== 'production') { // 在开发环境时候需要实时刷新 html 文件
+//   require('./index.html');
+// }
 
 console.log('$===', $, jQuery);
 // console.log('moment===', moment);
@@ -34,6 +36,8 @@ function component() {
   element.innerHTML = 'Hello webpack';
   element.classList.add('hello');
   element.classList.add('div1');
+
+  document.getElementById('audioTest').src = audioTest;
 
   // 将图像添加到 body 中。
   const myIcon = new Image();

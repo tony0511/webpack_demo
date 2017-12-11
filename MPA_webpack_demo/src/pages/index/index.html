@@ -3,8 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>MPA_webpack_demo</title>
+  <style type="text/css">
+      #div_1{
+        color: blue;
+      }
+  </style>
 </head>
 <body>
-  <a href="/page1.html">页面as1</a>
+  <div id="div_1">asdasd</div>
+  <img src="../../assets/img/editDisabled.png" alt="">
+  <div class="hello">hello HELLO HOME WORK CONTACT JOIN US</div>
+  <div class="">hello HELLO HOME WORK CONTACT JOIN US  normal font</div>
+  <div class="anotherFont">hello HELLO HOME WORK CONTACT JOIN US  Hum521l.ttf</div>
+  <a href="/page1.html">页面sdas1</a><br>
+  <audio src="../../assets/audio/1512287918.391.mp3" controls></audio><br>
+  <audio src="./1512287918.391.mp3" controls></audio><br>
+  <audio id="audioTest" controls></audio><br>
+  <!-- 对于大型图片的切换可以采用 css 处理显示其中一张图片（此时使用相对路径），或者把大型图片都放在 static 目录下直接拷贝到打包后的 static 目录下直接应用，通过 js 进行切换（此时使用绝对路径） -->
+  <img src="/static/edit.png" alt=""><br>
+  <img src="../../assets/img/timg.jpg" alt=""><br>
 </body>
+<script type="text/javascript" >
+  document.getElementById('div_1').style.background = 'red';
+</script>
 </html>
