@@ -31,13 +31,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable, // 代理
     quiet: true, // necessary for FriendlyErrorsPlugin（日志信息显示）除了初始启动信息之外的任何内容都不会被打印到控制台。这也意味着来自的WebPack的错误或警告在控制台不可见
     watchOptions: {
-      poll: config.dev.poll, // 是否使用轮询
+      poll: config.dev.poll, // 是否使用轮询，true 为使用，也可以指定轮询时间（毫秒）
       // ignored: /node_modules/, // 对于某些系统，监听大量文件系统会导致大量的 CPU 或内存占用。这个选项可以排除一些巨大的文件夹
     },
     // inline 模式一般用于单页面应用开发，会自动将 socket 注入到页面代码中，多页模式一般设置为 false
     // inline: true,
     // allowedHosts: ['subdomain2.host.com', '.host3.com', '.testhost.com'],
     // https: false, // 启用 https（此时 http 失效）默认 false
+    // stats: 'verbose', // 统计（object | boolean | none、errors-only、minimal、normal、verbose），参考 http://www.css88.com/doc/webpack/configuration/stats/
   },
   module: {
     rules: [
@@ -71,16 +72,16 @@ module.exports = new Promise((resolve, reject) => {
       devWebpackConfig.devServer.port = port;
 
       // Add FriendlyErrorsPlugin
-      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({ // 友好提示插件
-        compilationSuccessInfo: {
+      devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({ // 添加 webpack 友好提示插件
+        compilationSuccessInfo: { // 编译成功提示信息
           messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
         },
-        onErrors: config.dev.notifyOnErrors
+        onErrors: config.dev.notifyOnErrors // 报错信息提示
         ? utils.createNotifierCallback()
         : undefined,
       }))
 
-      resolve(devWebpackConfig);
+      resolve(devWebpackConfig); // 获取 port 成功后开始执行编译
     }
   })
 })

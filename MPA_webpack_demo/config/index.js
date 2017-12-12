@@ -8,7 +8,7 @@ module.exports = {
     assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录
     assetsPublicPath: '/dist/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src。
     productionSourceMap: false, // 生产环境是否需要 sourceMap
-    devtool: '#source-map', // sourceMap 方式
+    devtool: '#source-map', // sourceMap 方式（推荐）
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
     // Before setting to `true`, make sure to:
@@ -31,7 +31,7 @@ module.exports = {
     poll: false, // 是否使用轮询，https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
     assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录
     assetsPublicPath: '/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src。
-    devtool: '#cheap-module-eval-source-map', // sourceMap 方式
+    devtool: '#cheap-module-eval-source-map', // sourceMap 方式（推荐）
     proxyTable: { // 接口访问代理配置
       '/api_service/': {
         target: 'http://10.0.4.72:8092',

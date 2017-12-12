@@ -14,7 +14,7 @@ exports.assetsPath = function (_path) {
 exports.cssLoaders = function (options) {
   options = options || {};
 
-  const cssLoader = { // 处理 css
+  const cssLoader = { // 将 CSS 转化成 CommonJS 模块
     loader: 'css-loader',
     options: {
       minimize: process.env.NODE_ENV === 'production',
@@ -29,7 +29,7 @@ exports.cssLoaders = function (options) {
     }
   }
   // generate loader string to be used with extract text plugin
-  function generateLoaders (loader, loaderOptions) { // 处理其他 css
+  function generateLoaders (loader, loaderOptions) { // 将 less、scss、stylus 等编译成 CSS
     // var loaders = [cssLoader]
     const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader];
 
@@ -48,11 +48,11 @@ exports.cssLoaders = function (options) {
       return ExtractTextPlugin.extract({ // 提取 css 部分
         use: loaders,
         // fallback: 'vue-style-loader', // 针对 vue 使用的 loader
-        fallback: 'style-loader', // 针对普通 style 标签使用的 loader
+        fallback: 'style-loader', // 将 JS 字符串生成为 style 节点
       });
     } else {
       // return ['vue-style-loader'].concat(loaders); // 针对 vue 使用的 loader
-      return ['style-loader'].concat(loaders); // 针对普通 style 标签使用的 loader
+      return ['style-loader'].concat(loaders); // 将 JS 字符串生成为 style 节点
     }
   }
 
@@ -75,10 +75,10 @@ exports.cssLoaders = function (options) {
   style-loader： 将 JS 字符串生成为 style 节点
 */
 exports.styleLoaders = function (options) {
-  var output = []
-  var loaders = exports.cssLoaders(options)
-  for (var extension in loaders) {
-    var loader = loaders[extension]
+  const output = []
+  const loaders = exports.cssLoaders(options)
+  for (let extension in loaders) {
+    const loader = loaders[extension]
     output.push({
       test: new RegExp('\\.' + extension + '$'),
       use: loader
@@ -119,12 +119,12 @@ exports.getPagesPlugins = function (htmlPages){ // 多页插件导出
         removeComments: true, // 去掉注释
         collapseWhitespace: true, // 去除空格
         removeAttributeQuotes: true, // 去掉引用
-        collapseBooleanAttributes: true,
-        removeEmptyAttributes: true, // 去除空属性
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        minifyJS: true,
-        minifyCSS: true,
+        // collapseBooleanAttributes: true, // 合并 boolean 属性
+        // removeEmptyAttributes: true, // 去除空属性
+        // removeScriptTypeAttributes: true, // 去除 script 标签类型
+        // removeStyleLinkTypeAttributes: true, // 去除 style 标签类型
+        minifyJS: true, // 压缩 JS
+        minifyCSS: true, // 压缩 CSS
       },
       //暂时不要这种hash算法
       //hash: true
@@ -150,7 +150,7 @@ exports.getPagesPlugins = function (htmlPages){ // 多页插件导出
   return pagesPlugins;
 }
 
-exports.createNotifierCallback = () => {
+exports.createNotifierCallback = () => { // 返回 node 报错信息提示
   const notifier = require('node-notifier');
 
   return (severity, errors) => {

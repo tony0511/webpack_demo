@@ -1,7 +1,7 @@
 'use strict'; // 打包入口文件
 require('./check-versions')();
 
-process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production'; // 设置编译时环境变量为 production
 
 const ora = require('ora');
 const rm = require('rimraf');

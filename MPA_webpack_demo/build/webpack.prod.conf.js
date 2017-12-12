@@ -41,11 +41,11 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
     new UglifyJsPlugin({ // 压缩 js 文件
       uglifyOptions: {
         compress: {
-          warnings: false
+          warnings: false,
         }
       },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true
+      sourceMap: config.build.productionSourceMap, // 使用 source map 将错误信息的位置映射到模块，默认为 false
+      parallel: true, // 使用多进程并行运行和文件缓存来提高构建速度，默认为 false
     }),
     // new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html（见下面介绍）
     //   // title: 'Output Management',
@@ -103,7 +103,6 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
       name: 'vendor',
       minChunks: function (module, count) {
         // any required modules inside node_modules are extracted to vendor
-        // console.log('module==', module);
         return (
           module.resource &&
           /\.js$/.test(module.resource) &&
@@ -115,16 +114,8 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
-      chunks: ['vendor']
+      chunks: ['vendor'],
     }),
-    // copy custom static assets
-    new CopyWebpackPlugin([ // 复制静态文件
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ]),
     // This instance extracts shared chunks from code splitted chunks and bundles them
     // in a separate chunk, similar to the vendor chunk
     // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
@@ -132,25 +123,33 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
       name: 'app',
       async: 'vendor-async',
       children: true,
-      minChunks: 3
+      minChunks: 3,
     }),
+    // copy custom static assets
+    new CopyWebpackPlugin([ // 复制静态文件
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: config.build.assetsSubDirectory,
+        ignore: ['.*'],
+      }
+    ]),
    ],
 });
 
-if (config.build.productionGzip) { // 是否添加压缩文件
+if (config.build.productionGzip) { // 是否需要压缩文件（不能压缩目录，只能压缩文件）
   var CompressionWebpackPlugin = require('compression-webpack-plugin')
 
   prodWebpackConfig.plugins.push(
     new CompressionWebpackPlugin({
-      asset: '[path].gz[query]', // 地址
-      algorithm: 'gzip', // 压缩方式
-      test: new RegExp( // 哪些需要压缩
+      asset: '[path].gz[query]', // 目标资源名称，[file] 会被替换成原始资源，[path] 会被替换成原始资源的路径，[query] 会被替换成查询字符串。默认为 [path].gz[query]
+      algorithm: 'gzip', // 压缩方式，默认为 gzip
+      test: new RegExp( // 哪些文件需要压缩（默认为所有文件）
         '\\.(' +
         config.build.productionGzipExtensions.join('|') +
         ')$'
       ),
-      threshold: 10240, // 最大限值
-      minRatio: 0.8, // 压缩比例
+      threshold: 10240, // 超过该限值才会被压缩处理，默认为 0 bytes
+      minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理，默认为 0.8
     })
   )
 }

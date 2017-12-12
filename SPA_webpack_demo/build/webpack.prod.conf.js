@@ -47,8 +47,8 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
     }),
     new HtmlWebpackPlugin({ // 用新生成的 index.html 文件替换原来的 index.html（见下面介绍）
       // title: 'Output Management',
-      filename: config.build.index,
-      template: 'index.html',
+      filename: config.build.index, // 输出到指定的目录下
+      template: 'index.html', // 是指根目录下的 index.html 文件
       inject: true, // 是否要把所有的资产注入到给定的 html 中
       minify: { // 传递HTML-minifier的选项对象来缩小输出
         removeComments: true, // 去除注释

@@ -47,8 +47,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
+      filename: 'index.html', // 输出到根目录下
+      template: 'index.html', // 是指根目录下的 index.html 文件
       inject: true
     }),
    ],

@@ -21,6 +21,8 @@ const createLintingRule = () => ({
 })
 
 module.exports = { // webpack 基本配置导出
+  // target: 'web', // 构建目标，可选值 node、node-webkit、web、webworker、async-node、electron-main、electron-renderer，默认为 web
+  // recordsPath: path.join(__dirname, '../dist/records.json'), // 生成包含 webpack 记录的 JSON 文件（主要用来比较各个编译之间模块的改变）
   context: path.resolve(__dirname, "../"), // 基础目录，绝对路径，用于从配置中解析入口起点(entry point)和 loader（默认使用当前目录，但是推荐在配置中传递一个值。这使得你的配置独立于 CWD(current working directory - 当前执行路径)）
   /*
     entry: './path/to/my/entry/file.js', 等价于 entry: { main: './path/to/my/entry/file.js' },
@@ -71,6 +73,14 @@ module.exports = { // webpack 基本配置导出
     },
     // // webpack 解析模块时应该搜索的目录（默认为['node_modules']）
     // modules: [path.resolve(__dirname, "src"), "node_modules"],
+  },
+  performance: { // 性能提示
+    // hints: 'warning', // 性能提示级别，可选值 false、error 和 warning，默认为 false
+    maxEntrypointSize: 100000, // 入口起点文件大小限制（默认为 250000 bytes）
+    maxAssetSize: 100000, // 从 webpack 生成的任何文件大小限制（默认为 250000 bytes）
+    assetFilter: function(assetFilename) { // 过滤出哪些文件需要提示
+      return !(/\.map$/.test(assetFilename));
+    },
   },
   plugins: [ // 添加插件（注：相同的插件不要重复引入，否则会报错）
     ...utils.getPagesPlugins(htmlPagesConfig.htmlPages), // 各个页面插件加入
@@ -133,7 +143,7 @@ module.exports = { // webpack 基本配置导出
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/, // 图片处理
         loader: 'url-loader',
         options: {
-          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理（文件名为下面的 name 属性）
           name: utils.assetsPath('img/[name].[hash:10].[ext]'),
         }
       },
@@ -141,7 +151,7 @@ module.exports = { // webpack 基本配置导出
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/, // 音视频处理
         loader: 'url-loader',
         options: {
-          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理（文件名为下面的 name 属性）
           name: utils.assetsPath('media/[name].[hash:10].[ext]'),
         }
       },
@@ -149,7 +159,7 @@ module.exports = { // webpack 基本配置导出
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/, // 字体处理
         loader: 'url-loader',
         options: {
-          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理
+          limit: 10000, // 上限不能超过 10000 Bytes，超过后不嵌入到 html 文件中，以文件方式处理（文件名为下面的 name 属性）
           name: utils.assetsPath('fonts/[name].[hash:10].[ext]'),
         }
       },
