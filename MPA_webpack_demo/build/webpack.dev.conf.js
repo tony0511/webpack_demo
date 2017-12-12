@@ -1,7 +1,7 @@
 const merge = require('webpack-merge'); // webpack 合并配置插件
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // 用新生成的 index.html 文件替换原来的 index.html
-const portfinder = require('portfinder');
+const portfinder = require('portfinder'); // 端口处理插件
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin'); // 友好提示插件
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
@@ -51,7 +51,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.HotModuleReplacementPlugin(), // 模块热替换（这样 devServer 中的 hot: true 才能生效）
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(), // 在输出阶段时，遇到编译错误跳过
     // new HtmlWebpackPlugin({
     //   filename: 'index.html',
     //   template: 'index.html',
