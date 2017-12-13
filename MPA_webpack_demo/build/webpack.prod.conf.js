@@ -14,6 +14,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // 压缩 js 文件
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
 const utils = require('./utils');
+// const FileListPlugin = require('../webpack_plugin_test/FileListPlugin'); // 自定义的插件
 
 const prodWebpackConfig = merge(baseWebpackConfig, {
   // entry: { // 入口起点
@@ -133,6 +134,7 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*'],
       }
     ]),
+    // new FileListPlugin(), // 自定义的插件
    ],
 });
 

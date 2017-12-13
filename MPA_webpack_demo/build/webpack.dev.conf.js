@@ -6,6 +6,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin'); // 友�
 const baseWebpackConfig = require('./webpack.base.conf');
 const config = require('../config');
 const utils = require('./utils');
+// const FileListPlugin = require('../webpack_plugin_test/FileListPlugin'); // 自定义的插件
 
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
@@ -57,6 +58,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     //   template: 'index.html',
     //   inject: true
     // }),
+    // new FileListPlugin(), // 自定义的插件
    ],
 })
 
