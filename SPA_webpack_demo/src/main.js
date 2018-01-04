@@ -6,6 +6,7 @@ import './style.less';
 import Edit from './edit.png';
 import Data from './data.xml';
 import printMe from './print';
+import './test';
 
 console.log('$===', $, jQuery);
 // console.log('moment===', moment);
@@ -63,3 +64,5 @@ function component() {
 // document.body.appendChild(component());
 const element = component(); // 当 print.js 改变导致页面重新渲染时，重新获取渲染的元素
 document.body.appendChild(element);
+
+// console.log('AMap===', AMap);

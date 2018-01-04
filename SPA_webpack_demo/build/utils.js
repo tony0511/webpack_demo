@@ -87,8 +87,9 @@ exports.createNotifierCallback = () => {
   return (severity, errors) => {
     if (severity !== 'error') return
 
-    const error = errors[0]
-    const filename = error.file && error.file.split('!').pop()
+    const error = errors[0];
+    const filename = error.file && error.file.split('!').pop();
+    const packageConfig = require('../package.json');
 
     notifier.notify({
       title: packageConfig.name,

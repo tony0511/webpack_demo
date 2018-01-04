@@ -23,7 +23,7 @@ module.exports = {
     // bundleAnalyzerReport: process.env.npm_config_report,
   },
   dev: { // 开发环境配置
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '10.1.5.81', // can be overwritten by process.env.HOST
     port: 8082, // 开发环境端口配置
     autoOpenBrowser: false, // 是否需要自定启动浏览器
     errorOverlay: true,
