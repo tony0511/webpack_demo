@@ -4,9 +4,9 @@ var path = require('path')
 module.exports = {
   build: { // 生产环境配置
     pagesRoot: path.resolve(__dirname, '../src/pages'), // 输出index页面位置
-    assetsRoot: path.resolve(__dirname, '../dist'), // 所有有文件存放的根目录
-    assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录
-    assetsPublicPath: '/dist/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src。
+    assetsRoot: path.resolve(__dirname, '../dist'), // 所有有文件存放的根目录（所有文件打包时输出的根目录）
+    assetsSubDirectory: 'static', // 除了 html 文件其他文件的资源静态文件根目录（打包后需要存放的静态文件的目录）
+    assetsPublicPath: '/dist/', // 静态资源文件公共目录（如图片、音视频等），影响 index.html 页面文件引入的 src（访问时的公共目录）。
     productionSourceMap: false, // 生产环境是否需要 sourceMap
     devtool: '#source-map', // sourceMap 方式（推荐）
     // Gzip off by default as many popular static hosts such as

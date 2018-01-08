@@ -130,7 +130,7 @@ const prodWebpackConfig = merge(baseWebpackConfig, {
     new CopyWebpackPlugin([ // 复制静态文件
       {
         from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
+        to: config.build.assetsSubDirectory, // 相对于 assetRoot 目录
         ignore: ['.*'],
       }
     ]),
